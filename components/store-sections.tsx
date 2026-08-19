@@ -1,3 +1,5 @@
+import { ReviewsCarousel } from '@/components/reviews-carousel';
+
 export function ProcessSection() {
   return (
     <section className="section" id="process">
@@ -27,15 +29,10 @@ export function PricingSection() {
 }
 
 export function ReviewsSection() {
-  const reviews = [
-    ['“洗完毛特别顺，店员也很耐心。”', '我家金毛平时不太配合，这家店能安抚好情绪，回家后状态也很好。'],
-    ['“猫咪也能安心洗，细节做得不错。”', '预约流程清楚，洗护过程中会反馈状态，整个体验很省心。'],
-    ['“价格透明，没有乱加项。”', '先沟通再开始，做完后再看结果，比较适合长期来做日常护理。']
-  ];
   return (
     <section className="section">
       <div className="section-head"><div><h2>真实口碑</h2><p>让服务细节更有说服力。</p></div></div>
-      <div className="grid-3">{reviews.map(([title, copy]) => <article className="review" key={title}><div className="stars">★★★★★</div><h3>{title}</h3><p>{copy}</p></article>)}</div>
+      <ReviewsCarousel />
     </section>
   );
 }
