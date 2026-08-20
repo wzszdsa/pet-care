@@ -12,5 +12,6 @@ describe('BookingSection', () => {
     expect(markup).toContain('type="datetime-local"');
     expect(markup).toContain('required=""');
     expect(markup).toMatch(/min="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}"/);
+    expect(markup).toMatch(/value="\d{4}-\d{2}-\d{2}T09:30"/);
   });
 });
