@@ -46,7 +46,19 @@ export function validateAppointmentRequest(input: unknown, now = new Date()): Ap
   if (!isOneOf(input.service, appointmentServices)) return { ok: false, message: '服务项目无效' };
 
   const appointmentTime = typeof input.appointmentTime === 'string' ? input.appointmentTime : '';
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(appointmentTime)) {
+  const appointmentParts = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(appointmentTime);
+  if (!appointmentParts) {
+    return { ok: false, message: '期望到店时间格式无效' };
+  }
+
+  const [, yearText, monthText, dayText, hourText, minuteText] = appointmentParts;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  if (month < 1 || month > 12 || day < 1 || day > daysInMonth || hour > 23 || minute > 59) {
     return { ok: false, message: '期望到店时间格式无效' };
   }
 

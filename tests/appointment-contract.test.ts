@@ -53,6 +53,15 @@ describe('validateAppointmentRequest', () => {
     });
   });
 
+  it('rejects invalid calendar and clock components', () => {
+    for (const appointmentTime of ['2026-02-30T09:30', '2026-08-22T24:00', '2026-08-22T09:60']) {
+      expect(validateAppointmentRequest({ ...validRequest, appointmentTime }, now)).toEqual({
+        ok: false,
+        message: '期望到店时间格式无效'
+      });
+    }
+  });
+
   it('turns a blank note into null and rejects overlong text', () => {
     expect(validateAppointmentRequest({ ...validRequest, note: '   ' }, now)).toMatchObject({
       ok: true,
