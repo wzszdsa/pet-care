@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { submitAppointmentForm } from '../lib/appointment-form';
+
+const fallbackMessage = '预约提交失败，请稍后再试';
 
 const formatAppointmentDateTime = (date: Date) => [
   date.getFullYear(),
@@ -26,22 +28,26 @@ export function BookingSection() {
   const minAppointmentTime = formatAppointmentDateTime(now);
   const defaultAppointmentTime = getTomorrowMorningAppointmentTime();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
     setFeedback(null);
 
     const form = event.currentTarget;
-    const result = await submitAppointmentForm(new FormData(form));
+    try {
+      const result = await submitAppointmentForm(new FormData(form));
 
-    if (result.ok) {
-      form.reset();
-      setFeedback({ type: 'success', message: '预约提交成功，我们会尽快与您确认时间。' });
-    } else {
-      setFeedback({ type: 'error', message: result.message });
+      if (result.ok) {
+        form.reset();
+        setFeedback({ type: 'success', message: '预约提交成功，我们会尽快与您确认时间。' });
+      } else {
+        setFeedback({ type: 'error', message: result.message });
+      }
+    } catch {
+      setFeedback({ type: 'error', message: fallbackMessage });
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
   return (
@@ -59,7 +65,7 @@ export function BookingSection() {
           </div>
           <div style={{ marginTop: 12 }}><label htmlFor="note">补充说明</label><textarea id="note" name="note" placeholder="例如：怕吹风、容易打结、需要剪指甲等" maxLength={1000} /></div>
           <div className="actions"><button className="btn btn-primary" type="submit" disabled={submitting}>{submitting ? '提交中…' : '提交预约'}</button><button className="btn btn-secondary" type="button">联系门店</button></div>
-          <p aria-live="polite" role={feedback?.type === 'error' ? 'alert' : undefined}>{feedback?.message}</p>
+          <div className="form-feedback" aria-live="polite" role={feedback?.type === 'error' ? 'alert' : undefined}>{feedback?.message}</div>
         </form>
         <aside className="info">
           <div className="info-item"><div className="icon" style={{ margin: 0 }}>📍</div><div><b>门店地址</b><p>上海市某某区幸福路 88 号 1 层</p></div></div>
