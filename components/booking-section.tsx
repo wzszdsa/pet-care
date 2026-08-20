@@ -1,10 +1,22 @@
+const formatAppointmentDateTime = (date: Date) => [
+  date.getFullYear(),
+  String(date.getMonth() + 1).padStart(2, '0'),
+  String(date.getDate()).padStart(2, '0')
+].join('-') + 'T' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+
+const getTomorrowMorningAppointmentTime = () => {
+  const tomorrowMorning = new Date();
+
+  tomorrowMorning.setDate(tomorrowMorning.getDate() + 1);
+  tomorrowMorning.setHours(9, 30, 0, 0);
+
+  return formatAppointmentDateTime(tomorrowMorning);
+};
+
 export function BookingSection() {
   const now = new Date();
-  const minAppointmentTime = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, '0'),
-    String(now.getDate()).padStart(2, '0')
-  ].join('-') + 'T' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const minAppointmentTime = formatAppointmentDateTime(now);
+  const defaultAppointmentTime = getTomorrowMorningAppointmentTime();
 
   return (
     <section className="section" id="contact">
@@ -17,7 +29,7 @@ export function BookingSection() {
             <div><label htmlFor="pet">宠物名字</label><input id="pet" type="text" placeholder="例如：雪球" /></div>
             <div><label htmlFor="type">宠物类型</label><select id="type"><option>狗狗</option><option>猫咪</option><option>其他</option></select></div>
             <div><label htmlFor="service">想要服务</label><select id="service"><option>基础洗护</option><option>美容修剪</option><option>耳道护理</option><option>深度护理</option></select></div>
-            <div><label htmlFor="appointment-time">期望到店时间</label><input id="appointment-time" name="appointmentTime" type="datetime-local" min={minAppointmentTime} required /></div>
+            <div><label htmlFor="appointment-time">期望到店时间</label><input id="appointment-time" name="appointmentTime" type="datetime-local" min={minAppointmentTime} defaultValue={defaultAppointmentTime} required /></div>
           </div>
           <div style={{ marginTop: 12 }}><label htmlFor="note">补充说明</label><textarea id="note" placeholder="例如：怕吹风、容易打结、需要剪指甲等" /></div>
           <div className="actions"><button className="btn btn-primary" type="button">提交预约</button><button className="btn btn-secondary" type="button">联系门店</button></div>
