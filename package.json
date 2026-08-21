@@ -28,5 +28,24 @@
     "jsdom": "^30.0.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
-  }
+  },
+  "version": "1.0.0",
+  "description": "Next.js App Router + TypeScript 单页项目。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wzszdsa/pet-care.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wzszdsa/pet-care/issues"
+  },
+  "homepage": "https://github.com/wzszdsa/pet-care#readme"
 }

@@ -30,3 +30,6 @@ pnpm-debug.log*
 # Codex or local tool state
 .codex-skill-review-proxy-image-generator/
 .worktrees/
+
+# Local Netlify folder
+.netlify
