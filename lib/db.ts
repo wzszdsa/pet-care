@@ -24,7 +24,7 @@ export function getDbPool(): Pool {
   globalForDb.appointmentDbPool = new Pool({
     connectionString: databaseUrl,
     max: 5,
-    connectionTimeoutMillis: 5_000,
+    connectionTimeoutMillis: 10_000,
     idleTimeoutMillis: 10_000
   });
 
