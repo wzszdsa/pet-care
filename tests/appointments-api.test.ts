@@ -14,6 +14,8 @@ const validPayload = {
   note: '  怕吹风  '
 };
 
+const fixedNow = () => new Date('2026-08-21T00:00:00.000Z');
+
 function makeRequest(body: BodyInit): Request {
   return new Request('http://localhost/api/appointments', {
     method: 'POST',
@@ -55,7 +57,7 @@ describe('appointments POST route handler', () => {
       status: 'pending',
       createdAt: '2026-08-21T01:00:00.000Z'
     });
-    const handler = createAppointmentsPostHandler(() => ({ insert }));
+    const handler = createAppointmentsPostHandler(() => ({ insert }), fixedNow);
 
     const response = await handler(makeRequest(JSON.stringify(validPayload)));
 
@@ -76,10 +78,34 @@ describe('appointments POST route handler', () => {
     });
   });
 
+  test('uses the injected clock when checking whether an appointment is in the future', async () => {
+    const insert = vi.fn<AppointmentStore['insert']>().mockResolvedValue({
+      id: 'appointment-clock',
+      status: 'pending',
+      createdAt: '2026-08-21T01:00:00.000Z'
+    });
+    const handler = createAppointmentsPostHandler(() => ({ insert }), fixedNow);
+
+    const response = await handler(
+      makeRequest(JSON.stringify({ ...validPayload, appointmentTime: '2026-08-21T09:30' }))
+    );
+
+    expect(response.status).toBe(201);
+    expect(insert).toHaveBeenCalledWith({
+      customerName: '林女士',
+      phone: '138-0000-0000',
+      petName: '雪球',
+      petType: '猫咪',
+      service: '基础洗护',
+      appointmentTime: '2026-08-21T01:30:00.000Z',
+      note: '怕吹风'
+    });
+  });
+
   test('database configuration failure returns a 503 response', async () => {
     const handler = createAppointmentsPostHandler(() => {
       throw new DatabaseConfigurationError();
-    });
+    }, fixedNow);
 
     const response = await handler(makeRequest(JSON.stringify(validPayload)));
 
@@ -92,7 +118,7 @@ describe('appointments POST route handler', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const handler = createAppointmentsPostHandler(() => ({
       insert: vi.fn().mockRejectedValue(new Error(originalMessage))
-    }));
+    }), fixedNow);
 
     const response = await handler(makeRequest(JSON.stringify(validPayload)));
     const responseText = await response.text();

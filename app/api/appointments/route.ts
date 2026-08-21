@@ -8,8 +8,11 @@ function jsonError(error: string, status: number): Response {
   return Response.json({ error }, { status });
 }
 
+export type AppointmentNowProvider = () => Date;
+
 export function createAppointmentsPostHandler(
-  storeFactory: () => AppointmentStore = createAppointmentStore
+  storeFactory: () => AppointmentStore = createAppointmentStore,
+  nowProvider: AppointmentNowProvider = () => new Date()
 ): (request: Request) => Promise<Response> {
   return async function handleAppointmentsPost(request: Request): Promise<Response> {
     let input: unknown;
@@ -20,7 +23,7 @@ export function createAppointmentsPostHandler(
       return jsonError('请求 JSON 格式无效', 400);
     }
 
-    const validation = validateAppointmentRequest(input);
+    const validation = validateAppointmentRequest(input, nowProvider());
     if (!validation.ok) {
       return jsonError(validation.message, 400);
     }

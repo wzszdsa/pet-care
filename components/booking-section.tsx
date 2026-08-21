@@ -1,32 +1,18 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { formatShanghaiDateTime, getTomorrowMorningAppointmentTime } from '../lib/appointment-time';
 import { submitAppointmentForm } from '../lib/appointment-form';
 
 const fallbackMessage = '预约提交失败，请稍后再试';
-
-const formatAppointmentDateTime = (date: Date) => [
-  date.getFullYear(),
-  String(date.getMonth() + 1).padStart(2, '0'),
-  String(date.getDate()).padStart(2, '0')
-].join('-') + 'T' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
-
-const getTomorrowMorningAppointmentTime = () => {
-  const tomorrowMorning = new Date();
-
-  tomorrowMorning.setDate(tomorrowMorning.getDate() + 1);
-  tomorrowMorning.setHours(9, 30, 0, 0);
-
-  return formatAppointmentDateTime(tomorrowMorning);
-};
 
 export function BookingSection() {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const now = new Date();
-  const minAppointmentTime = formatAppointmentDateTime(now);
-  const defaultAppointmentTime = getTomorrowMorningAppointmentTime();
+  const minAppointmentTime = formatShanghaiDateTime(now);
+  const defaultAppointmentTime = getTomorrowMorningAppointmentTime(now);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
