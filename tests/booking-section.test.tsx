@@ -92,7 +92,11 @@ describe('BookingSection', () => {
     resolveSubmission({ ok: true, id: 'appointment-1', status: 'pending', createdAt: '2026-08-21T01:00:00.000Z' });
 
     const successFeedback = await screen.findByText('预约提交成功，我们会尽快与您确认时间。');
-    expect(successFeedback.getAttribute('aria-live')).toBe('polite');
+    const successCard = successFeedback.closest('.form-feedback');
+    expect(successCard).not.toBeNull();
+    expect(successCard?.classList.contains('form-feedback--success')).toBe(true);
+    expect(successCard?.getAttribute('aria-live')).toBe('polite');
+    expect(successCard?.textContent).toContain('✓');
     expect(successFeedback.getAttribute('role')).toBeNull();
     expect(submitButton.disabled).toBe(false);
     expect(customerName.value).toBe('');

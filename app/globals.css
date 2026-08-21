@@ -336,6 +336,42 @@
     textarea { min-height: 110px; resize: vertical; }
     input:focus, select:focus, textarea:focus { border-color: rgba(255,138,91,0.8); box-shadow: 0 0 0 4px rgba(255,138,91,0.12); }
     .actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .form-feedback {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      min-width: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .form-feedback:empty { display: none; }
+    .form-feedback--success {
+      padding: 12px 14px;
+      border: 1px solid rgba(61, 155, 99, 0.28);
+      border-radius: 12px;
+      background: rgba(232, 248, 237, 0.94);
+      color: #267346;
+      animation: appointment-feedback-in 260ms ease-out both;
+    }
+    .form-feedback--error { color: #b14b42; }
+    .form-feedback__icon {
+      display: inline-grid;
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border-radius: 50%;
+      background: #3d9b63;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    @keyframes appointment-feedback-in {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .info {
       padding: 18px;
       display: grid;
@@ -528,5 +564,9 @@
   .review-arrow,
   .review-dot {
     transition-duration: 0.01ms !important;
+  }
+
+  .form-feedback--success {
+    animation: none;
   }
 }

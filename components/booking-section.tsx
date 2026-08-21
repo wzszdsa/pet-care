@@ -51,7 +51,14 @@ export function BookingSection() {
           </div>
           <div style={{ marginTop: 12 }}><label htmlFor="note">补充说明</label><textarea id="note" name="note" placeholder="例如：怕吹风、容易打结、需要剪指甲等" maxLength={1000} /></div>
           <div className="actions"><button className="btn btn-primary" type="submit" disabled={submitting}>{submitting ? '提交中…' : '提交预约'}</button><button className="btn btn-secondary" type="button">联系门店</button></div>
-          <div className="form-feedback" aria-live="polite" role={feedback?.type === 'error' ? 'alert' : undefined}>{feedback?.message}</div>
+          <div
+            className={feedback?.type === 'success' ? 'form-feedback form-feedback--success' : feedback?.type === 'error' ? 'form-feedback form-feedback--error' : 'form-feedback'}
+            aria-live="polite"
+            role={feedback?.type === 'error' ? 'alert' : undefined}
+          >
+            {feedback?.type === 'success' && <span className="form-feedback__icon" aria-hidden="true">✓</span>}
+            {feedback?.message && <span>{feedback.message}</span>}
+          </div>
         </form>
         <aside className="info">
           <div className="info-item"><div className="icon" style={{ margin: 0 }}>📍</div><div><b>门店地址</b><p>上海市某某区幸福路 88 号 1 层</p></div></div>
